@@ -1,0 +1,15 @@
+// Split the string by " "
+vector<string> split(const string & str)
+{
+	typedef istream_iterator<string> stringIterator;
+	typedef back_insert_iterator<vector<string>> vectorIterator;
+	
+	vector<string> words;
+	vectorIterator insertIterator(words);
+
+	istringstream buffer(str);
+	stringIterator strIn(buffer);
+
+	copy(strIn, stringIterator(), insertIterator);
+	return words;
+}

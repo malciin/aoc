@@ -35,6 +35,11 @@ int main()
 		}
 		it = puzzleList.insert(++it, insertVal);
 		insertVal++;
+		if (*it == 2017)
+		{
+			cout << "After " << *it << " we have " << *++it <<"\n";
+			it--;
+		}
 	}
 
 
@@ -44,8 +49,7 @@ int main()
 	{
 		if(*it == 0)
 		{
-			cout << *it << " ";
-			cout << *++it;
+			cout << "After zero we have " << *++it;
 			break;
 		}
 		it++;

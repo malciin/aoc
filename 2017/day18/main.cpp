@@ -37,46 +37,32 @@ int main()
             else
                 val = stoi(program[instruction][2]);
             if (program[instruction][0] == "set")
-            {
                 mapValue[var] = val;
-            }
             else if (program[instruction][0] == "add")
-            {
                 mapValue[var] += val;
-            }
             else if (program[instruction][0] == "mul")
-            {
                 mapValue[var] *= val;
-            }
             else if (program[instruction][0] == "mod")
-            {
                 mapValue[var] = mapValue[var] % val;
-            }
             else if (program[instruction][0] == "jgz")
             {
+                long long val2;
                 if (isalpha(var[0]))
-                {
-                    if (mapValue[var] > 0)
-                    {
-                        instruction += val;
-                        continue;
-                    }
-                }
-                else if (stoi(var) > 0)
+                    val2 = mapValue[var];
+                else
+                    val2 = stoi(var);
+                if (val2 > 0)
                 {
                     instruction += val;
                     continue;
                 }
             }
             else throw std::exception();
-            cout << var << ": " << mapValue[var] << "\n";
         }
         else if (program[instruction].size() == 2)
         {
             if (program[instruction][0] == "snd")
-            {
                 lastPlayed = mapValue[var];
-            }
             else if (program[instruction][0] == "rcv")
             {
                 if (mapValue[var] != 0)

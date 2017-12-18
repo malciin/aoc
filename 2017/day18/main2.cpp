@@ -26,11 +26,11 @@ void threadProgram(const vector<vector<string>> & program,
     while(true)
     {
         string var = program[instruction][1];
+
+        // set default value for the variable
         if (mapValue.find(var) == mapValue.end())
-        {
             if (isalpha(var[0]))
                 mapValue[var] = 0;
-        }
             
         if (program[instruction].size() == 3)
         {
@@ -40,33 +40,23 @@ void threadProgram(const vector<vector<string>> & program,
                 val = mapValue[program[instruction][2]];
             else
                 val = stoi(program[instruction][2]);
+
             if (program[instruction][0] == "set")
-            {
                 mapValue[var] = val;
-            }
             else if (program[instruction][0] == "add")
-            {
                 mapValue[var] += val;
-            }
             else if (program[instruction][0] == "mul")
-            {
                 mapValue[var] *= val;
-            }
             else if (program[instruction][0] == "mod")
-            {
                 mapValue[var] = mapValue[var] % val;
-            }
             else if (program[instruction][0] == "jgz")
             {
+                long long val2;
                 if (isalpha(var[0]))
-                {
-                    if (mapValue[var] > 0)
-                    {
-                        instruction += val;
-                        continue;
-                    }
-                }
-                else if (stoi(var) > 0)
+                    val2 = mapValue[var];
+                else
+                    val2 = stoi(var);
+                if (val2 > 0)
                 {
                     instruction += val;
                     continue;

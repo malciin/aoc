@@ -1,6 +1,6 @@
 #include "Helpers.h"
 using namespace std;
-namespace h{
+namespace aoc{
 
 vector<string> split(const string & str, const string & splitBy)
 {

@@ -1,12 +1,21 @@
+/*
+    PART 2 BRUTE FORCE CHECK
+*/
 #include "../Helpers/Helpers.h"
 #include <cmath>
-#include <iterator>
 using namespace std;
 
 struct pos{
     int x;
     int y;
     int z;
+    pos & operator += (const pos & oth)
+    {
+        x += oth.x;
+        y += oth.y;
+        z += oth.z;
+        return *this;
+    }
     bool operator==(const pos &other) const
     { 
         return (x == other.x && y == other.y && z == other.z);
@@ -20,14 +29,14 @@ struct particle{
 };
 
 namespace std{
-template<>
-struct hash<pos>
-{
-    size_t operator()(const pos & x) const
+    template<>
+    struct hash<pos>
     {
-        return x.x * 73856093 ^ x.y * 19349663 ^ x.z * 83492791;
-    }
-};
+        size_t operator()(const pos & x) const
+        {
+            return x.x * 73856093 ^ x.y * 19349663 ^ x.z * 83492791;
+        }
+    };
 };
 
 long long distance3dManhattan(const pos & a)
@@ -81,27 +90,17 @@ int main()
         if (!queueVal.empty())
             throw std::exception();
         particles.push_back(part);
-        //cout << "p=<" << part.position.x << "," << part.position.y << "," << part.position.z << ">, ";
-        //cout << "p=<" << part.velocity.x << "," << part.velocity.y << "," << part.velocity.z << ">, ";
-        //cout << "p=<" << part.acceleration.x << "," << part.acceleration.y << "," << part.acceleration.z << ">, ";
     }
 
-
     int howManySeconds = 500;
-    int destroyed = 0;
-    
     for(int i = 0; i<howManySeconds; i++)
     {
         vector<pos> toRemove;
         unordered_set<pos> collisions;
         for(auto & part : particles)
         {
-            part.velocity.x += part.acceleration.x;
-            part.velocity.y += part.acceleration.y;
-            part.velocity.z += part.acceleration.z;
-            part.position.x += part.velocity.x;
-            part.position.y += part.velocity.y;
-            part.position.z += part.velocity.z;
+            part.velocity += part.acceleration;
+            part.position += part.velocity;
             
             if(collisions.find(part.position) == collisions.end())
                 collisions.insert(part.position);
@@ -109,7 +108,6 @@ int main()
                 toRemove.push_back(part.position);
         }
         int removed = 0;
-        
         for(int i = 0, n = particles.size(); i < n - removed; i++)
         {
             if (any_of(toRemove.begin(), toRemove.end(), [&](pos position){
@@ -122,19 +120,10 @@ int main()
                 i--;
                 removed++;
                 continue;
-         
             }
         }
-        if (removed != 0)
-            destroyed += removed;
-            
+        particles.resize(particles.size() - removed);      
     }
 
-    auto min = distance(particles.begin(), min_element(particles.begin(), particles.end(), [](const particle & a, const particle & b){
-        if(distance3dManhattan(a.position) < distance3dManhattan(b.position))
-            return true;
-        return false;
-    }));
-
-    cout << min << " Left: " << 1000 - destroyed;
+    cout << "Left: " << particles.size();
 }

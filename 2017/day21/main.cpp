@@ -49,7 +49,6 @@ void iterate(vector<string> & pattern, const vector<pair<vector<string>, vector<
 
     // For each square
     for(int i = 0; i<pattern.size() / size; i++)
-    {
         for(int j = 0; j<pattern.size() / size; j++)
         {
             vector<string> square;
@@ -75,14 +74,9 @@ void iterate(vector<string> & pattern, const vector<pair<vector<string>, vector<
 
             // Insert the our new matrix to our map
             for(int x = 0; x<square.size(); x++)
-            {
                 for(int y = 0; y<square.size(); y++)
-                {
                     newPattern[x + i * square.size()][y + j * square.size()] = square[x][y];
-                }
-            }
         }
-    }
     pattern = newPattern;
 }
 
@@ -122,7 +116,5 @@ int main()
         if (i == 4)
             cout << "After 5 iterations: " << computePixels(map) << " pixels\n";
     }
-        
-    
     cout << "After 18 iterations: " << computePixels(map) << " pixels\n";
 }

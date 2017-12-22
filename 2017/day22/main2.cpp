@@ -1,5 +1,4 @@
 #include "../Helpers/Helpers.h"
-#include <set>
 using namespace std;
 
 struct pairhash {
@@ -96,6 +95,13 @@ public:
             break;
         }
     }
+
+    void findMax()
+    {
+        pair<int, int> max;
+        for_each(flagged.begin(), flagged.end(), [&](pair<int, int> x) {if (x > max) max = x;});
+        cout << max.first << " " << max.second << "\n";
+    }
 };
 
 int main()
@@ -111,12 +117,9 @@ int main()
     Virus virus;
     virus.setMap(map);
 
-    aoc::measureTimeMS();
     for(int i = 0; i<10000000; i++)
         virus.activate();
         
-    int time = aoc::measureTimeMS();
-        
-    cout << "After: " << time << "ms\n"; 
     cout << "Part2: " << virus.getInfectionBurst() << "\n";
+    virus.findMax();
 }

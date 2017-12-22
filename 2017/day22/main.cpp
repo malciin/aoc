@@ -7,8 +7,6 @@ class Virus
         UP, RIGHT, DOWN, LEFT
     };
     int dir;
-    // Use unordered_set for better performance - I used 
-    // set because I was too lazy to copypaste hash function for pair<int,int>
     set<pair<int, int>> infected;
     pair<int, int> position;    // first is y pos, second is x pos
     int infectionBurst;

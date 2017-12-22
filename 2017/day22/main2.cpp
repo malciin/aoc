@@ -2,15 +2,23 @@
 #include <set>
 using namespace std;
 
+struct pairhash {
+public:
+    size_t operator()(const pair<int, int> &x) const
+    {
+        return (x.first << 16) + x.second;
+    }
+};
+
 class Virus
 {
     enum Direction{
         UP, RIGHT, DOWN, LEFT
     };
     int dir;
-    set<pair<int, int>> weakened;
-    set<pair<int, int>> infected;
-    set<pair<int, int>> flagged;
+    unordered_set<pair<int, int>, pairhash> weakened;
+    unordered_set<pair<int, int>, pairhash> infected;
+    unordered_set<pair<int, int>, pairhash> flagged;
 
     pair<int, int> position;    // first is y pos, second is x pos
     int infectionBurst;
@@ -38,7 +46,7 @@ public:
         return infectionBurst;
     }
 
-    void activate()
+    inline void activate()
     {
         // If node is weakened
         if(weakened.find(position) != weakened.end())
@@ -103,8 +111,12 @@ int main()
     Virus virus;
     virus.setMap(map);
 
+    aoc::measureTimeMS();
     for(int i = 0; i<10000000; i++)
         virus.activate();
         
-    cout << "Part1: " << virus.getInfectionBurst() << "\n";
+    int time = aoc::measureTimeMS();
+        
+    cout << "After: " << time << "ms\n"; 
+    cout << "Part2: " << virus.getInfectionBurst() << "\n";
 }

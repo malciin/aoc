@@ -6,6 +6,7 @@
 using namespace std;
 typedef pair<int, int> part;
 
+// Generate the bridges, but not generate the short bridges that can have another part
 void generateBridges(const vector<part> & parts)
 {
     struct Bridge{

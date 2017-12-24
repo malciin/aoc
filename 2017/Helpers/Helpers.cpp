@@ -1,4 +1,5 @@
 #include "Helpers.h"
+#include <chrono>
 using namespace std;
 namespace aoc{
 
@@ -34,6 +35,32 @@ vector<string> split(const string & str, const char splitBy)
     string _splitBy;
     _splitBy += splitBy;
     return split(str, _splitBy);
+}
+
+int measureTimeMS()
+{
+    static chrono::steady_clock::time_point start, end;
+    start = end;
+    end = chrono::steady_clock::now();
+
+
+    chrono::duration<float> elapsedD = end - start;
+    chrono::milliseconds elapsed = chrono::duration_cast<chrono::milliseconds>(elapsedD);
+
+    return elapsed.count();
+}
+
+int measureTimeUS()
+{
+    static chrono::steady_clock::time_point start, end;
+    start = end;
+    end = std::chrono::steady_clock::now();
+
+
+    chrono::duration<float> elapsedD = end - start;
+    chrono::microseconds elapsed = chrono::duration_cast<chrono::microseconds>(elapsedD);
+
+    return elapsed.count();
 }
 
 };

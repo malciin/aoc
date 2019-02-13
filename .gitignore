@@ -2,8 +2,11 @@
 **/*.obj
 **/*.gch
 **/.vscode/*
+**/.vs/*
 2016/*
 2017/day21/main2.cpp
 2017/day21/main3.cpp
 2017/day21/main4.cpp
 2017/day21/main6.cpp
+**/bin/*
+**/obj/*

@@ -1,9 +1,12 @@
 ﻿namespace AoC2018
 {
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
+            Day day = new Day04();
+
+            day.PrintDayResults();
         }
     }
 }

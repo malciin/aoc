@@ -4,7 +4,7 @@
     {
         public static void Main()
         {
-            Day day = new Day07();
+            Day day = new Day12();
 
             day.PrintDayResults();
         }

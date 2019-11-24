@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using _2018.Utils;
 
 namespace AoC2018
 {
     public class Day06 : Day
     {
-        private readonly IEnumerable<Vector> inputs;
+        private readonly IEnumerable<Vector2d> inputs;
 
         public Day06()
         {
@@ -16,14 +17,14 @@ namespace AoC2018
                 .Select(l =>
                 {
                     var splitted = l.Split(", ");
-                    return new Vector { X = int.Parse(splitted[0]), Y = int.Parse(splitted[1]) };
+                    return new Vector2d { X = int.Parse(splitted[0]), Y = int.Parse(splitted[1]) };
                 })
                 .ToArray();
         }
 
         protected override string Part1()
         {
-            var inputDimension = GenerateInputDimension(inputs);
+            var inputDimension = Vector2d.GenerateVectorsDimension(inputs);
 
             return inputs
                 .Where(v => IsFinite(v, inputs, inputDimension))
@@ -36,9 +37,9 @@ namespace AoC2018
 
         protected override string Part2()
         {
-            var inputDimension = GenerateInputDimension(inputs);
+            var inputDimension = Vector2d.GenerateVectorsDimension(inputs);
 
-            var validDestinations = new List<Vector>();
+            var validDestinations = new List<Vector2d>();
 
             // todo: find smarter way
             for(int x = -2_000 - inputDimension.X; x<2_000; x++)
@@ -49,7 +50,7 @@ namespace AoC2018
                 }
                 for(int y = -2_000 - inputDimension.Y; y<2_000; y++)
                 {
-                    var vector = new Vector { X = x + inputDimension.X, Y = y + inputDimension.Y };
+                    var vector = new Vector2d { X = x + inputDimension.X, Y = y + inputDimension.Y };
 
                     if (inputs.Select(v => ManhattanDistance(vector, v)).Sum() < 10_000)
                     {
@@ -61,10 +62,10 @@ namespace AoC2018
             return validDestinations.Count.ToString();
         }
 
-        private IEnumerable<Vector> GenerateArea(Vector vector, IEnumerable<Vector> otherVectors)
+        private IEnumerable<Vector2d> GenerateArea(Vector2d vector, IEnumerable<Vector2d> otherVectors)
         {
-            var checkedPoints = new HashSet<Vector>();
-            var pointsToCheck = new HashSet<Vector>(new[] { vector });
+            var checkedPoints = new HashSet<Vector2d>();
+            var pointsToCheck = new HashSet<Vector2d>(new[] { vector });
 
             while(pointsToCheck.Count != 0)
             {
@@ -79,7 +80,7 @@ namespace AoC2018
                 else
                     continue;
 
-                foreach(var candidateToCheck in eightDirectionsVectors.Select(v => new Vector { X = checkedVector.X + v.X, Y = checkedVector.Y + v.Y }))
+                foreach(var candidateToCheck in eightDirectionsVectors.Select(v => new Vector2d { X = checkedVector.X + v.X, Y = checkedVector.Y + v.Y }))
                 {
                     if (!checkedPoints.Contains(candidateToCheck) && !pointsToCheck.Contains(candidateToCheck))
                     {
@@ -89,10 +90,10 @@ namespace AoC2018
             }
         }
 
-        private bool IsFinite(Vector checkedVector, IEnumerable<Vector> otherVectors, Vector inputDimensions)
+        private bool IsFinite(Vector2d checkedVector, IEnumerable<Vector2d> otherVectors, Vector2d inputDimensions)
         {
             var pointsToCheck = eightDirectionsVectors
-                .Select(v => new Vector
+                .Select(v => new Vector2d
                 {
                     X = checkedVector.X + inputDimensions.X * v.X,
                     Y = checkedVector.Y + inputDimensions.Y * v.Y
@@ -118,10 +119,10 @@ namespace AoC2018
         }
 
         /// <returns>Returns closest vector to given position or null if there are multiple vectors close to that point</returns>
-        Vector? GetClosestVectorTo(Vector position, IEnumerable<Vector> checkedVectors)
+        Vector2d? GetClosestVectorTo(Vector2d position, IEnumerable<Vector2d> checkedVectors)
         {
             int currentMinEqualVectors = 1;
-            Vector currentMinVector = checkedVectors.First();
+            Vector2d currentMinVector = checkedVectors.First();
             int currentMinDistance = ManhattanDistance(currentMinVector, position);
 
             foreach (var checkedVector in checkedVectors.Skip(1))
@@ -148,72 +149,19 @@ namespace AoC2018
             return currentMinVector;
         }
 
-        // Generate dimensions of rectangle that contains all input points
-        private Vector GenerateInputDimension(IEnumerable<Vector> inputs)
-        {
-            var firstInput = inputs.First();
-
-            int minX = firstInput.X;
-            int maxX = firstInput.X;
-            int minY = firstInput.Y;
-            int maxY = firstInput.Y;
-
-            foreach(var input in inputs.Skip(1))
-            {
-                if (minX > input.X) minX = input.X;
-                if (minY > input.Y) minY = input.Y;
-                if (maxX < input.X) maxX = input.X;
-                if (maxY < input.Y) maxY = input.Y;
-            }
-
-            return new Vector { X = Math.Abs(maxX - minX), Y = Math.Abs(maxY - minY) };
-        }
-
-        private static int ManhattanDistance(Vector first, Vector second)
+        private static int ManhattanDistance(Vector2d first, Vector2d second)
             => Math.Abs(first.X - second.X) + Math.Abs(first.Y - second.Y);
 
-        private static readonly IEnumerable<Vector> eightDirectionsVectors = new[]
+        private static readonly IEnumerable<Vector2d> eightDirectionsVectors = new[]
         {
-            new Vector(0, 1),
-            new Vector(0, -1),
-            new Vector(1, 0),
-            new Vector(-1, 0),
-            new Vector(1, 1),
-            new Vector(1, -1),
-            new Vector(-1, 1),
-            new Vector(-1, -1)
+            new Vector2d(0, 1),
+            new Vector2d(0, -1),
+            new Vector2d(1, 0),
+            new Vector2d(-1, 0),
+            new Vector2d(1, 1),
+            new Vector2d(1, -1),
+            new Vector2d(-1, 1),
+            new Vector2d(-1, -1)
         };
-
-        private struct Vector : IEquatable<Vector>
-        {
-            public int X;
-            public int Y;
-
-            public Vector(int X, int Y)
-            {
-                this.X = X;
-                this.Y = Y;
-            }
-
-            public bool Equals(Vector other) => X == other.X && Y == other.Y;
-
-            public override bool Equals(object obj)
-            {
-                if (obj is Vector vec)
-                    return Equals(vec);
-
-                return false;
-            }
-
-            public override int GetHashCode()
-            {
-                int hash = 17;
-
-                hash = hash * 23 + X.GetHashCode();
-                hash = hash * 23 + Y.GetHashCode();
-
-                return hash;
-            }
-        }
     }
 }

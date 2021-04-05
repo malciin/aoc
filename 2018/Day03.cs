@@ -18,9 +18,9 @@ namespace AoC2018
                 .ReadAllLines("Day03.txt")
                 .Select(line =>
                 {
-                    var values = regex
+                    var values = (regex
                         .Match(line)
-                        .Groups
+                        .Groups as IEnumerable<Group>)
                         .Skip(1)
                         .Select(g => int.Parse(g.Value))
                         .ToArray();

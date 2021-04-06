@@ -103,41 +103,6 @@ namespace AoC2018
             }
         }
 
-        private void PrintMap(char[][] track, List<Cart> carts)
-        {
-            for (int i = 0; i < track.Length; i++)
-            {
-                for (int j = 0; j < track[i].Length; j++)
-                {
-                    var sign = carts.FirstOrDefault(c => c.I == i && c.J == j)?.Sign;
-                    if (sign == null)
-                    {
-                        Console.Write(track[i][j]);
-                        continue;
-                    }
-
-                    if (sign == Up)
-                    {
-                        Console.Write('^');
-                    }
-                    else if (sign == Left)
-                    {
-                        Console.Write('<');
-                    }
-                    else if (sign == Right)
-                    {
-                        Console.Write('>');
-                    }
-                    else if (sign == Down)
-                    {
-                        Console.Write('v');
-                    }
-                }
-
-                Console.WriteLine();
-            }
-        }
-
         private (char[][] track, List<Cart> carts) LoadTrackAndCarts(string trackString)
             => LoadTrackAndCarts(trackString.Split(Environment.NewLine));
 
